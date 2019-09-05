@@ -49,7 +49,7 @@ void EditCloud::rangeFilter()
     pcl::PassThrough<pcl::PointXYZ> passX;
     passX.setInputCloud(cloud);
     passX.setFilterFieldName("x");
-    passX.setFilterLimits(-0.15, 0.15);
+    passX.setFilterLimits(-0.20, 0.20);
     passX.setFilterLimitsNegative(false);
     passX.filter(*cloud);
 
@@ -63,7 +63,7 @@ void EditCloud::rangeFilter()
     pcl::PassThrough<pcl::PointXYZ> passZ;
     passZ.setInputCloud(cloud);
     passZ.setFilterFieldName("z");
-    passZ.setFilterLimits(0.30, 0.50);
+    passZ.setFilterLimits(-0.20, 0.20);
     passZ.setFilterLimitsNegative(false);
     passZ.filter(*cloud);
 }
@@ -127,7 +127,7 @@ void EditCloud::remove_plane()
 void EditCloud::filter() 
 {
     remove_plane();
-    //rangeFilter();
+    rangeFilter();
     //outline();
     voxel_grid();
 }

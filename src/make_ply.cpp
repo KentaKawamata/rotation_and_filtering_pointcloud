@@ -10,6 +10,7 @@ ROStoPCL::ROStoPCL() :
     R (Eigen::Matrix4d::Identity()),
     filename ("/mnt/container-data/model_for_RT/trimed_3d_model.ply"),
     save_name ("/mnt/container-data/model_for_RT/filtered_3D_model.ply")
+    //save_name ("/mnt/container-data/model_for_RT/test_3D_model.ply")
 {
     rotevec = new GetRotationVector();
     edit = new EditCloud();
