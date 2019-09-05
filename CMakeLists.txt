@@ -1,8 +1,12 @@
 cmake_minimum_required(VERSION 3.12)
 
 set(SOURCE_NAME
-        src/rotation.cpp
-        include/rotation.h)
+        src/make_ply.cpp
+        src/getRotationVector.cpp
+        src/editCloud.cpp
+        include/make_ply.hpp
+        include/getRotationVector.hpp
+        include/editCloud.hpp)
 
 function(Flag flag init_flag flag_message)
     if(NOT DEFINED ${flag})

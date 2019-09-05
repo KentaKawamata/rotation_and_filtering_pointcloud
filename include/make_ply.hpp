@@ -19,7 +19,8 @@ private:
 
     std::string cloud_frame;
 
-    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_pcl;
+    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud;
+    pcl::PointCloud<pcl::PointXYZ>::Ptr filtered_cloud;
 
     Eigen::Matrix3d R3d;
     Eigen::Matrix4d R;

@@ -1,6 +1,6 @@
 #include <Eigen/Core>
 #include <Eigen/LU>
-#include "./getRotationVector.hpp"
+#include "./../include/getRotationVector.hpp"
 
 GetRotationVector::GetRotationVector() : 
     R3d (Eigen::Matrix3d::Identity()),

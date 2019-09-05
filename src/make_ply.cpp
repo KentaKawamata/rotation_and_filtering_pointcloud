@@ -1,13 +1,12 @@
 #include <pcl/common/transforms.h>
 #include <pcl/io/ply_io.h>
+#include <pcl/visualization/pcl_visualizer.h>
 
 #include "./../include/make_ply.hpp"
 
 ROStoPCL::ROStoPCL() : 
-    cloud_pcl (new pcl::PointCloud<pcl::PointXYZ>()),
+    cloud (new pcl::PointCloud<pcl::PointXYZ>()),
     R (Eigen::Matrix4d::Identity()),
-    cloud_frame ("/camera/depth/color/points"),
-    count (0),
     filename ("/root/datas/model_for_RT/3d_model.ply")
 {
     rotevec = new GetRotationVector();
@@ -20,22 +19,24 @@ ROStoPCL::~ROStoPCL()
     delete edit;
 }
 
+void ROStoPCL::read_cloud()
+{
+    pcl::io::loadPLYFile(filename, *cloud);
+}
+
 void ROStoPCL::savePointcloud()
 {
-    pcl::PointCloud<pcl::PointXYZ>::Ptr total_cloud (new pcl::PointCloud<pcl::PointXYZ>());
-    pcl::io::loadPLYFile(filename, *total_cloud);
-
-    pcl::io::savePLYFileASCII(filename, *cloud_pcl);
+    pcl::io::savePLYFileASCII(filename, *filtered_cloud);
 }
 
 void ROStoPCL::transformPointCloud() {
 
-    pcl::copyPointCloud(*cloud_pcl, *(edit->cloud));
+    pcl::copyPointCloud(*cloud, *(edit->cloud));
     edit->filter();
-    pcl::copyPointCloud(*(edit->cloud), *cloud_pcl);
-    pcl::transformPointCloud(*cloud_pcl, *cloud_pcl, R); 
 
-    savePointcloud();
+    pcl::copyPointCloud(*(edit->cloud), *filtered_cloud);
+    pcl::transformPointCloud(*cloud, *cloud, R); 
+    pcl::transformPointCloud(*filtered_cloud, *filtered_cloud, R); 
 }
 
 void ROStoPCL::quaternion_to_euler() {
@@ -52,10 +53,32 @@ void ROStoPCL::quaternion_to_euler() {
     R = rotevec->R;
 }
 
+void ROStoPCL::visualize_cloud()
+{
+	boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer(new pcl::visualization::PCLVisualizer("Matched Viewer"));
+	viewer->setBackgroundColor(255, 255, 255);
+	pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> handler_1(cloud, 255, 0, 0);
+	viewer->addPointCloud<pcl::PointXYZ>(cloud, handler_1, "cloud 1");
+	pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> handler_2(filtered_cloud, 0, 0, 255);
+	viewer->addPointCloud<pcl::PointXYZ>(filtered_cloud, handler_2, "cloud 2");
+	viewer->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 5, "cloud");
+	viewer->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 5, "filtered_cloud");
+	
+    viewer->addCoordinateSystem();
+
+	//The position of the camera
+	while (!viewer->wasStopped())
+    {
+		viewer->spinOnce(100);
+	}
+}
+
 void ROStoPCL::run()
 {
+    read_cloud();
     quaternion_to_euler();
     transformPointCloud();
+    savePointcloud();
 }
 
 int main(int argc, char *argv[])
