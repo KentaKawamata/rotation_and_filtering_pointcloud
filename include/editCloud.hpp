@@ -18,7 +18,7 @@ public:
 
 private:
 
-    void smooth();
+    //void smooth();
     void rangeFilter();
     void outline();
     void voxel_grid();

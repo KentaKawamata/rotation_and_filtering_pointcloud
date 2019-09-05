@@ -21,6 +21,7 @@ EditCloud::~EditCloud(){
 
 }
 
+/*
 void EditCloud::smooth() {
    
     pcl::search::KdTree<pcl::PointXYZ>::Ptr tree (new pcl::search::KdTree<pcl::PointXYZ>);//Kdtreeの作成
@@ -41,6 +42,7 @@ void EditCloud::smooth() {
 
     pcl::copyPointCloud(mls_points, *cloud);
 }
+*/
 
 void EditCloud::rangeFilter()
 {
@@ -87,7 +89,7 @@ void EditCloud::outline()
 
 void EditCloud::voxel_grid()
 {
-    float size = 0.0128f;
+    float size = 0.001f;
     std::shared_ptr<pcl::VoxelGrid<pcl::PointXYZ>> sor (new pcl::VoxelGrid<pcl::PointXYZ>);
     sor->setInputCloud(cloud);
     sor->setLeafSize(size, size, size);
@@ -124,9 +126,10 @@ void EditCloud::remove_plane()
 
 void EditCloud::filter() 
 {
-    //remove_plane();
-    rangeFilter();
+    remove_plane();
+    //rangeFilter();
     //outline();
+    voxel_grid();
 }
 
 void EditCloud::out_filter()

@@ -12,7 +12,8 @@ class ROStoPCL {
 
 private:
 
-    std::string filename;
+    std::string  filename;
+    std::string  save_name;
 
     std::string lis_header_id;
     std::string lis_child_id;

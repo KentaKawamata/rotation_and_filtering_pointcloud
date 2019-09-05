@@ -6,8 +6,10 @@
 
 ROStoPCL::ROStoPCL() : 
     cloud (new pcl::PointCloud<pcl::PointXYZ>()),
+    filtered_cloud (new pcl::PointCloud<pcl::PointXYZ>()),
     R (Eigen::Matrix4d::Identity()),
-    filename ("/root/datas/model_for_RT/3d_model.ply")
+    filename ("/mnt/container-data/model_for_RT/trimed_3d_model.ply"),
+    save_name ("/mnt/container-data/model_for_RT/filtered_3D_model.ply")
 {
     rotevec = new GetRotationVector();
     edit = new EditCloud();
@@ -26,7 +28,7 @@ void ROStoPCL::read_cloud()
 
 void ROStoPCL::savePointcloud()
 {
-    pcl::io::savePLYFileASCII(filename, *filtered_cloud);
+    pcl::io::savePLYFileASCII(save_name, *filtered_cloud);
 }
 
 void ROStoPCL::transformPointCloud() {
@@ -35,6 +37,9 @@ void ROStoPCL::transformPointCloud() {
     edit->filter();
 
     pcl::copyPointCloud(*(edit->cloud), *filtered_cloud);
+
+    std::cout << "filtered num = " << filtered_cloud->size() << std::endl;
+
     pcl::transformPointCloud(*cloud, *cloud, R); 
     pcl::transformPointCloud(*filtered_cloud, *filtered_cloud, R); 
 }
@@ -45,7 +50,7 @@ void ROStoPCL::quaternion_to_euler() {
     rotevec->tpclY = 0.0;
     rotevec->tpclX = 0.0;
 
-    rotevec->roll  = 20*(M_PI/180);
+    rotevec->roll  = -20.0*(M_PI/180);
     rotevec->pitch = 0.0;
     rotevec->yaw   = 0.0;
 
@@ -79,6 +84,7 @@ void ROStoPCL::run()
     quaternion_to_euler();
     transformPointCloud();
     savePointcloud();
+    visualize_cloud();
 }
 
 int main(int argc, char *argv[])
