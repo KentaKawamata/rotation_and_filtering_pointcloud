@@ -89,7 +89,7 @@ void EditCloud::outline()
 
 void EditCloud::voxel_grid()
 {
-    float size = 0.001f;
+    float size = 0.003f;
     std::shared_ptr<pcl::VoxelGrid<pcl::PointXYZ>> sor (new pcl::VoxelGrid<pcl::PointXYZ>);
     sor->setInputCloud(cloud);
     sor->setLeafSize(size, size, size);

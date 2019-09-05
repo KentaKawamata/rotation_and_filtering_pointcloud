@@ -40,17 +40,17 @@ void ROStoPCL::transformPointCloud() {
 
     std::cout << "filtered num = " << filtered_cloud->size() << std::endl;
 
-    pcl::transformPointCloud(*cloud, *cloud, R); 
+    //pcl::transformPointCloud(*cloud, *cloud, R); 
     pcl::transformPointCloud(*filtered_cloud, *filtered_cloud, R); 
 }
 
 void ROStoPCL::quaternion_to_euler() {
 
-    rotevec->tpclZ =  0.0;
-    rotevec->tpclY = 0.0;
-    rotevec->tpclX = 0.0;
+    rotevec->tpclZ = 0.0;
+    rotevec->tpclY = 0.05;
+    rotevec->tpclX = 0.025;
 
-    rotevec->roll  = -20.0*(M_PI/180);
+    rotevec->roll  = -7.1*(M_PI/180);
     rotevec->pitch = 0.0;
     rotevec->yaw   = 0.0;
 
